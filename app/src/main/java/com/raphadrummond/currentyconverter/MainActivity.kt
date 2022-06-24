@@ -1,15 +1,13 @@
 package com.raphadrummond.currentyconverter
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
 import com.google.gson.JsonObject
 import com.raphadrummond.currentyconverter.api.Endpoint
 import com.raphadrummond.currentyconverter.util.NetworkUtils
 import retrofit2.Call
-import retrofit2.Converter
 import retrofit2.Response
-import javax.security.auth.callback.Callback
 
 class MainActivity : AppCompatActivity() {
     private lateinit var spFrom : Spinner
@@ -33,7 +31,7 @@ class MainActivity : AppCompatActivity() {
 
         btConvert.setOnClickListener { convertMoney() }
     }
-    fun convertMoney(){
+    private fun convertMoney(){
         val retrofiClient = NetworkUtils.getRetrofitInstance("https://cdn.jsdelivr.net/")
         val endpoint = retrofiClient.create(Endpoint::class.java)
 
@@ -44,7 +42,7 @@ class MainActivity : AppCompatActivity() {
                 val rate : Double = data?.value.toString().toDouble()
                 val conversion = etValueFrom.text.toString().toDouble() * rate
 
-                tvResult.setText(conversion.toString())
+                tvResult.text = conversion.toString()
             }
 
             override fun onFailure(call: Call<JsonObject>, t: Throwable) {
@@ -56,7 +54,7 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    fun getCurrencies(){
+    private fun getCurrencies(){
         val retrofitClient = NetworkUtils.getRetrofitInstance("https://cdn.jsdelivr.net/")
         val endpoint = retrofitClient.create(Endpoint::class.java)
 
@@ -69,7 +67,7 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 val posBRL = data.indexOf("brl")
-                val postUSD = data.indexOf("usd")
+                val posUSD = data.indexOf("usd")
 
                 val adapter = ArrayAdapter(baseContext, android.R.layout.simple_spinner_dropdown_item, data)
                 spFrom.adapter = adapter
